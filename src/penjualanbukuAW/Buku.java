@@ -26,7 +26,7 @@ public class Buku extends javax.swing.JFrame {
     public Buku() {
         initComponents();
         
-        konek = koneksi.konek("root","root");
+        konek = koneksi.konek("root","");
         
         m = new DefaultTableModel();
         jTable2.setModel(m);
@@ -35,8 +35,7 @@ public class Buku extends javax.swing.JFrame {
         m.addColumn("Judul Buku");
         m.addColumn("Kategori");
         m.addColumn("Harga");
-        ambilData();
-        
+        ambilData();        
     }
 
     /**
@@ -423,7 +422,10 @@ public class Buku extends javax.swing.JFrame {
     private void hapus(){
         if(id.getText().equals("")||ISBN.getText().equals("")||JudulBuku.getText().equals("")||Harga.getText().equals("")||Kategori.getSelectedItem().equals("")){
          JOptionPane.showMessageDialog(this,"Pilih data dari tabel dahulu!");   
-        }else{
+        }
+        
+        else
+        {
             String perintah = "DELETE FROM buku WHERE id ='"+id.getText().toString()+"'";
             try{
                 int p = 
@@ -445,32 +447,35 @@ public class Buku extends javax.swing.JFrame {
         }
     }
     
-    public void golek(){
+    public void golek()
+    {
         //Kosongkan Tabel
         m.getDataVector().removeAllElements();
         m.fireTableDataChanged();
-     try{
+        try
+        {
            
             String perintah = "SELECT*FROM buku WHERE id like '%"+fieldCari.getText().toString()+"%'"+"OR ISBN like '%"+fieldCari.getText().toString()+"%'"+"OR JudulBuku like '%"+fieldCari.getText().toString()+"%'";
             pst = konek.prepareStatement(perintah);
             rs   = pst.executeQuery(perintah);
-            if(rs.getFetchSize() <= 0){
-                JOptionPane.showMessageDialog(this, "Data tidak ditemukan!");
+            if(rs.getFetchSize() < 0){
+                JOptionPane.showMessageDialog(this, "Data tidak ditemmukan!");
                 ambilData();
             }
            
-           while(rs.next()){
-                     m.addRow(new Object[]{
-                    rs.getString(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    
-                });
+           while(rs.next())
+           {
+                     m.addRow(new Object[]
+                     {
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                     });
             }
       }catch(SQLException err){
-            JOptionPane.showMessageDialog(null, "Data tidak ditemukan!");
+            JOptionPane.showMessageDialog(null, "Data tidak ditemukaan!");
       }
      
 }
@@ -528,16 +533,21 @@ public class Buku extends javax.swing.JFrame {
     
     private void simpan(){
         if(id.getText().equals("")||ISBN.getText().equals("")||JudulBuku.getText().equals("")||Harga.getText().equals("")||Kategori.getSelectedItem().equals("")){
-         JOptionPane.showMessageDialog(this,"Data Harus Di Isi");   
-        }else{
+         JOptionPane.showMessageDialog(this,"Data Harus Diisi");   
+        }
+        else
+        {
             String perintah = "INSERT INTO buku (id,ISBN,JudulBuku,Kategori,Harga) VALUES ('"+id.getText().toString()+"','"+ISBN.getText().toString()+"','"+JudulBuku.getText().toString()+"','"+Kategori.getSelectedItem()+"','Rp "+Harga.getText().toString()+"')";
-            try{
+            try
+            {
                PreparedStatement pst = konek.prepareStatement(perintah);
                pst.executeUpdate();
                JOptionPane.showMessageDialog(this, "Data berhasil masuk");
                reset();
                ambilData();
-            }catch(SQLException k){
+            }
+            catch(SQLException k)
+            {
                 JOptionPane.showMessageDialog(this, k);
             }
         }
